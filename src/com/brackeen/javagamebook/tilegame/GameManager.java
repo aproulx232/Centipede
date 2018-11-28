@@ -369,7 +369,7 @@ public class GameManager extends GameCore {
         }
         if (creature instanceof Player) {
             boolean canKill = (oldY < creature.getY());
-            checkPlayerCollision((Player)creature, canKill);
+            checkPlayerCollision((Player)creature, false);
         }
 
     }
@@ -390,9 +390,9 @@ public class GameManager extends GameCore {
         // check for player collision with other sprites
         Sprite collisionSprite = getSpriteCollision(player);
         if (collisionSprite instanceof PowerUp) {
-            acquirePowerUp((PowerUp)collisionSprite);
+            //acquirePowerUp((PowerUp)collisionSprite);
         }
-        else if (collisionSprite instanceof Creature) {
+        else if (collisionSprite instanceof Centipede) {
             Creature badguy = (Creature)collisionSprite;
             if (canKill) {
                 // kill the badguy and make player bounce

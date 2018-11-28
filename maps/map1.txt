@@ -8,10 +8,10 @@
 #   *       Goal
 #   1       centipedeSprite
 #   2       Bad Guy 2 (fly)
-o                   o                 o
-                o                      
+    111                                
+                o                     o
     oo    o                            
-    1                                  
+                                       
           o                            
         o                              
                                        
