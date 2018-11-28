@@ -16,7 +16,7 @@ public class Centipede extends Creature {
 
 
     public float getMaxSpeed() {
-        return 0.1f;
+        return 0.3f;
     }
 
     /**
@@ -24,7 +24,9 @@ public class Centipede extends Creature {
      tile horizontally.
      */
     public void collideHorizontal() {
-        setY(getY()+20);
+        if(getY() < (800-400)){
+            setY(getY()+20);
+        }
         setVelocityX(-getVelocityX());
     }
 

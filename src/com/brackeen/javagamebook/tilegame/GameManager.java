@@ -317,11 +317,7 @@ public class GameManager extends GameCore {
         long elapsedTime)
     {
 
-        // Check if health is 0
-        if (!creature.isFlying()) {
-            creature.setVelocityY(creature.getVelocityY() +
-                GRAVITY * elapsedTime);
-        }
+
 
         // change x
         float dx = creature.getVelocityX();
