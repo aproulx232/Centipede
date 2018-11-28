@@ -10,7 +10,8 @@ public class Centipede extends Creature {
     public Centipede(Animation left, Animation right,
         Animation deadLeft, Animation deadRight)
     {
-        super(left, right, deadLeft, deadRight);
+        super(left, right, deadLeft, deadRight, 2);
+
     }
 
 

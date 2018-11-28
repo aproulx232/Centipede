@@ -10,7 +10,7 @@ public class Laser extends Creature {
     public Laser(Animation left, Animation right,
         Animation deadLeft, Animation deadRight)
     {
-        super(left, right, deadLeft, deadRight);
+        super(left, right, deadLeft, deadRight,-1);
     }
 
 

@@ -371,6 +371,16 @@ public class GameManager extends GameCore {
             boolean canKill = (oldY < creature.getY());
             checkPlayerCollision((Player)creature, false);
         }
+        if (creature instanceof Centipede) {
+            Sprite collide = getSpriteCollision(creature);
+            if (collide instanceof Laser) {
+                creature.setHealth(creature.getHealth()-1);
+                ((Laser) collide).setState(Creature.STATE_DEAD);
+            }
+            else if (collide instanceof PowerUp) { //TODO: add derived class mushroom of power up
+                creature.collideHorizontal();
+            }
+        }
 
     }
 

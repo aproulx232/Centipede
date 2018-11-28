@@ -25,18 +25,20 @@ public abstract class Creature extends Sprite {
     private Animation deadRight;
     private int state;
     private long stateTime;
+    private int health;
 
     /**
         Creates a new Creature with the specified Animations.
     */
     public Creature(Animation left, Animation right,
-        Animation deadLeft, Animation deadRight)
+        Animation deadLeft, Animation deadRight, int health)
     {
         super(right);
         this.left = left;
         this.right = right;
         this.deadLeft = deadLeft;
         this.deadRight = deadRight;
+        this.health = health;
         state = STATE_NORMAL;
     }
 
@@ -170,6 +172,16 @@ public abstract class Creature extends Sprite {
         stateTime += elapsedTime;
         if (state == STATE_DYING && stateTime >= DIE_TIME) {
             setState(STATE_DEAD);
+        }
+    }
+
+    public int getHealth(){
+        return this.health;
+    }
+    public void setHealth(int health){
+        this.health = health;
+        if(this.health == 0){
+            setState(STATE_DYING);
         }
     }
 
