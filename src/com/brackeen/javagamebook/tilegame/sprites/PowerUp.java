@@ -60,8 +60,8 @@ public abstract class PowerUp extends Sprite {
     /**
      A Mushroom PowerUp. Advances to the next map.
      */
-    public static class Mushroom extends PowerUp {
-        public Mushroom(Animation anim) {
+    public static class Mushroomb extends PowerUp {
+        public Mushroomb(Animation anim) {
             super(anim);
         }
     }

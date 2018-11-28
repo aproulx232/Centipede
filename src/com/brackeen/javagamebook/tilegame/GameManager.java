@@ -317,7 +317,7 @@ public class GameManager extends GameCore {
         long elapsedTime)
     {
 
-        // apply gravity
+        // Check if health is 0
         if (!creature.isFlying()) {
             creature.setVelocityY(creature.getVelocityY() +
                 GRAVITY * elapsedTime);
@@ -379,10 +379,16 @@ public class GameManager extends GameCore {
             if (collide instanceof Laser) {
                 creature.setHealth(creature.getHealth()-1);
                 ((Laser) collide).setState(Creature.STATE_DEAD);
-
             }
-            else if (collide instanceof PowerUp) { //TODO: add derived class mushroom of power up
+            else if (collide instanceof Mushroom) {
                 creature.collideHorizontal();
+            }
+        }
+        if(creature instanceof Laser){
+            Sprite collide = getSpriteCollision(creature);
+            if (collide instanceof Mushroom) {
+                ((Mushroom) collide).setHealth(((Mushroom) collide).getHealth()-1);
+                creature.setState(Creature.STATE_DEAD);
             }
         }
 

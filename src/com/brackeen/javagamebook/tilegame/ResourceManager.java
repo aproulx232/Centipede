@@ -270,6 +270,7 @@ public class ResourceManager {
         Animation[] playerAnim = new Animation[4];
         Animation[] laserAnim = new Animation[4];
         Animation[] centipedeAnim = new Animation[4];
+        Animation[] mushroomAnim = new Animation[4];
         for (int i=0; i<4; i++) {
             playerAnim[i] = createPlayerAnim(
                 images[i][0], images[i][1], images[i][2]);
@@ -277,6 +278,8 @@ public class ResourceManager {
                 images[i][3], images[i][4], images[i][5]);
             centipedeAnim[i] = createCentipedeAnim(
                 images[i][6], images[i][7]);
+            mushroomAnim[i] = createMushroomAnim(
+                    images[i][8], images[i][9], images[i][10]);
         }
 
         // create creature sprites
@@ -286,8 +289,20 @@ public class ResourceManager {
                 laserAnim[2], laserAnim[3]);
         centipedeSprite = new Centipede(centipedeAnim[0], centipedeAnim[1],
                 centipedeAnim[2], centipedeAnim[3]);
+        mushroomSprite = new Mushroom(createImgAnim(images[0][8]),createImgAnim(images[0][9]),
+                createImgAnim(images[0][10]),createImgAnim(images[0][8]));
     }
 
+    /**
+     * Creates a single img animation
+     * @param img1
+     * @return
+     */
+    private Animation createImgAnim(Image img1){
+        Animation anim = new Animation();
+        anim.addFrame(img1, 2500);
+        return anim;
+    }
 
     private Animation createPlayerAnim(Image player1,
         Image player2, Image player3)
@@ -303,11 +318,20 @@ public class ResourceManager {
     }
 
 
-    private Animation createLaserAnim(Image img1, Image img2,
-        Image img3)
+    private Animation createLaserAnim(Image img1, Image img2, Image img3)
     {
         Animation anim = new Animation();
         anim.addFrame(img1, 50);
+
+        return anim;
+    }
+
+    private Animation createMushroomAnim(Image img1, Image img2, Image img3)
+    {
+        Animation anim = new Animation();
+        anim.addFrame(img1, 100000000);
+        anim.addFrame(img2, 250);
+        anim.addFrame(img3, 250);
 
         return anim;
     }
@@ -352,13 +376,14 @@ public class ResourceManager {
         anim.addFrame(loadImage("music3.png"), 150);
         anim.addFrame(loadImage("music2.png"), 150);
         musicSprite = new PowerUp.Music(anim);
-
+    /*
         // create "mushroom" sprite
         anim = new Animation();
         anim.addFrame(loadImage("mushroom1.png"), 150);
         //anim.addFrame(loadImage("mushroom2.png"), 150);
         //anim.addFrame(loadImage("mushroom3.png"), 150);
         mushroomSprite = new PowerUp.Mushroom(anim);
+        */
     }
 
 }

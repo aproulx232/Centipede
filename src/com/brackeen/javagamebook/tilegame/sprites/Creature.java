@@ -5,8 +5,8 @@ import com.brackeen.javagamebook.graphics.*;
 
 /**
     A Creature is a Sprite that is affected by gravity and can
-    die. It has four Animations: moving left, moving right,
-    dying on the left, and dying on the right.
+    die. It has four Animations: moving anim1, moving anim2,
+    dying on the anim1, and dying on the anim2.
 */
 public abstract class Creature extends Sprite {
 
@@ -19,8 +19,8 @@ public abstract class Creature extends Sprite {
     public static final int STATE_DYING = 1;
     public static final int STATE_DEAD = 2;
 
-    private Animation left;
-    private Animation right;
+    private Animation anim1;
+    private Animation anim2;
     private Animation deadLeft;
     private Animation deadRight;
     private int state;
@@ -30,12 +30,12 @@ public abstract class Creature extends Sprite {
     /**
         Creates a new Creature with the specified Animations.
     */
-    public Creature(Animation left, Animation right,
-        Animation deadLeft, Animation deadRight, int health)
+    public Creature(Animation anim1, Animation anim2,
+                    Animation deadLeft, Animation deadRight, int health)
     {
-        super(right);
-        this.left = left;
-        this.right = right;
+        super(anim2);
+        this.anim1 = anim1;
+        this.anim2 = anim2;
         this.deadLeft = deadLeft;
         this.deadRight = deadRight;
         this.health = health;
@@ -48,8 +48,8 @@ public abstract class Creature extends Sprite {
         Constructor constructor = getClass().getConstructors()[0];
         try {
             return constructor.newInstance(new Object[] {
-                (Animation)left.clone(),
-                (Animation)right.clone(),
+                (Animation) anim1.clone(),
+                (Animation) anim2.clone(),
                 (Animation)deadLeft.clone(),
                 (Animation)deadRight.clone()
             });
@@ -72,7 +72,7 @@ public abstract class Creature extends Sprite {
 
     /**
         Wakes up the creature when the Creature first appears
-        on screen. Normally, the creature starts moving left.
+        on screen. Normally, the creature starts moving anim1.
     */
     public void wakeUp() {
         if (getState() == STATE_NORMAL && getVelocityX() == 0) {
@@ -147,15 +147,15 @@ public abstract class Creature extends Sprite {
         // select the correct Animation
         Animation newAnim = anim;
         if (getVelocityX() < 0) {
-            newAnim = left;
+            newAnim = anim1;
         }
         else if (getVelocityX() > 0) {
-            newAnim = right;
+            newAnim = anim2;
         }
-        if (state == STATE_DYING && newAnim == left) {
+        if (state == STATE_DYING && newAnim == anim1) {
             newAnim = deadLeft;
         }
-        else if (state == STATE_DYING && newAnim == right) {
+        else if (state == STATE_DYING && newAnim == anim2) {
             newAnim = deadRight;
         }
 
@@ -183,6 +183,19 @@ public abstract class Creature extends Sprite {
         if(this.health == 0){
             setState(STATE_DYING);
         }
+    }
+
+    public Animation getAnim1(){
+        return anim1;
+    }
+    public Animation getAnim2(){
+        return anim2;
+    }
+    public  Animation getDeadLeft(){
+        return deadLeft;
+    }
+    public Animation getDeadRight(){
+        return deadRight;
     }
 
 }
