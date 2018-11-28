@@ -147,6 +147,12 @@ public class TileMapRenderer {
                 ((Creature)sprite).wakeUp();
             }
         }
+
+        // Draw Score
+        g.drawString("Score: " + map.getScore(),400,50 );
+
+        // Draw player health
+        g.drawString("Lives: " + ((Creature)player).getHealth(),100,50 );
     }
 
     public int getTileSize(){

@@ -78,6 +78,9 @@ public class GameManager extends GameCore {
             midiPlayer.getSequence("sounds/music.midi");
         midiPlayer.play(sequence, true);
         toggleDrumPlayback();
+
+        //spawn centipede
+        spawnNewCentipede();
     }
 
 
@@ -138,7 +141,7 @@ public class GameManager extends GameCore {
             }
             if (shoot.isPressed()) {
                 player.shoot();
-                shootLaser((int)player.getX(),(int)player.getY());
+                shootLaser(renderer.pixelsToTiles(player.getX()),renderer.pixelsToTiles(player.getY()));
             }
             player.setVelocityX(velocityX);
             player.setVelocityY(velocityY);
@@ -295,6 +298,7 @@ public class GameManager extends GameCore {
                 Creature creature = (Creature)sprite;
                 if (creature.getState() == Creature.STATE_DEAD) {
                     i.remove();
+                    map.setScore(map.getScore()+creature.getPointValue());
                 }
                 else {
                     updateCreature(creature, elapsedTime);
@@ -306,6 +310,8 @@ public class GameManager extends GameCore {
 
         //check if all centipedes are dead
         checkLastCentipede();
+
+
     }
 
 
@@ -419,7 +425,13 @@ public class GameManager extends GameCore {
             }
             else {
                 // player dies!
-                player.setState(Creature.STATE_DYING);
+               //player.setState(Creature.STATE_DYING);
+                player.setHealth(player.getHealth()-1);
+                player.setX(400);
+                player.setY(400);
+                if (player.getHealth() == 0){
+                    map.setScore(0);
+                }
             }
         }
     }
@@ -427,7 +439,7 @@ public class GameManager extends GameCore {
     /**
      * Checks if all the centipededs are gone from the map. If yes, spawns a new one
      */
-    private void checkLastCentipede() {
+    private boolean checkLastCentipede() {
         Iterator itr = map.getSprites();
         boolean centipedeAlive = false;
         while (itr.hasNext()) {
@@ -440,10 +452,15 @@ public class GameManager extends GameCore {
             }
         }
         if (centipedeAlive == false) {
-            // Spawn new centipede
-            for(int k = map.getWidth() - 5;k<map.getWidth();k++) {
-                resourceManager.addSprite(map, resourceManager.getCentipedeSprite(), k, 0);
-            }
+            spawnNewCentipede();
+        }
+        return centipedeAlive;
+    }
+
+    private void spawnNewCentipede(){
+        // Spawn new centipede
+        for(int k = map.getWidth() - 5;k<map.getWidth();k++) {
+            resourceManager.addSprite(map, resourceManager.getCentipedeSprite(), k, 0);
         }
     }
 
@@ -472,8 +489,8 @@ public class GameManager extends GameCore {
         }
     }
 
-    public void shootLaser(int x, int y) {
-        resourceManager.addSprite(map,resourceManager.getLaserSprite(),renderer.pixelsToTiles(x),renderer.pixelsToTiles(y-20));
+    public void shootLaser(int tileX, int tileY) {
+        resourceManager.addSprite(map,resourceManager.getLaserSprite(),tileX,tileY-1);
     }
 
 }

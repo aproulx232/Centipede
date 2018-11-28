@@ -16,7 +16,7 @@ public class Player extends Creature {
     public Player(Animation left, Animation right,
         Animation deadLeft, Animation deadRight)
     {
-        super(left, right, deadLeft, deadRight,3);
+        super(left, right, deadLeft, deadRight,3,0);
     }
 
 

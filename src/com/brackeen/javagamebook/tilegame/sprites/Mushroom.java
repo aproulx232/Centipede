@@ -10,7 +10,7 @@ public class Mushroom extends Creature {
     public Mushroom(Animation left, Animation right,
                  Animation deadLeft, Animation deadRight)
     {
-        super(left, right, deadLeft, deadRight,3);
+        super(left, right, deadLeft, deadRight,3, 5);
     }
 
 

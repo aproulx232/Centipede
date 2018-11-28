@@ -13,7 +13,7 @@ public abstract class Creature extends Sprite {
     /**
         Amount of time to go from STATE_DYING to STATE_DEAD.
     */
-    private static final int DIE_TIME = 1000;
+    private static final int DIE_TIME = 0;
 
     public static final int STATE_NORMAL = 0;
     public static final int STATE_DYING = 1;
@@ -26,12 +26,13 @@ public abstract class Creature extends Sprite {
     private int state;
     private long stateTime;
     private int health;
+    private int pointValue;
 
     /**
         Creates a new Creature with the specified Animations.
     */
     public Creature(Animation anim1, Animation anim2,
-                    Animation deadLeft, Animation deadRight, int health)
+                    Animation deadLeft, Animation deadRight, int health, int pointValue)
     {
         super(anim2);
         this.anim1 = anim1;
@@ -39,6 +40,7 @@ public abstract class Creature extends Sprite {
         this.deadLeft = deadLeft;
         this.deadRight = deadRight;
         this.health = health;
+        this.pointValue = pointValue;
         state = STATE_NORMAL;
     }
 
@@ -196,6 +198,10 @@ public abstract class Creature extends Sprite {
     }
     public Animation getDeadRight(){
         return deadRight;
+    }
+
+    public int getPointValue(){
+        return pointValue;
     }
 
 }

@@ -31,6 +31,7 @@ public class ResourceManager {
     private Sprite mushroomSprite;
     private Sprite centipedeSprite;
 
+
     /**
         Creates a new ResourceManager with the specified
         GraphicsConfiguration.
@@ -185,6 +186,7 @@ public class ResourceManager {
         player.setY(400);
         newMap.setPlayer(player);
 
+
         return newMap;
     }
 
@@ -321,7 +323,7 @@ public class ResourceManager {
     private Animation createLaserAnim(Image img1, Image img2, Image img3)
     {
         Animation anim = new Animation();
-        anim.addFrame(img1, 50);
+        anim.addFrame(img1, 500);
 
         return anim;
     }
@@ -330,8 +332,7 @@ public class ResourceManager {
     {
         Animation anim = new Animation();
         anim.addFrame(img1, 100000000);
-        anim.addFrame(img2, 250);
-        anim.addFrame(img3, 250);
+
 
         return anim;
     }

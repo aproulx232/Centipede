@@ -17,6 +17,7 @@ public class TileMap {
     private Image[][] tiles;
     private LinkedList sprites;
     private Sprite player;
+    private int score;
 
     /**
         Creates a new TileMap with the specified width and
@@ -25,6 +26,7 @@ public class TileMap {
     public TileMap(int width, int height) {
         tiles = new Image[width][height];
         sprites = new LinkedList();
+        score = 0;
     }
 
 
@@ -43,6 +45,13 @@ public class TileMap {
         return tiles[0].length;
     }
 
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score){
+        this.score = score;
+    }
 
     /**
         Gets the tile at the specified location. Returns null if

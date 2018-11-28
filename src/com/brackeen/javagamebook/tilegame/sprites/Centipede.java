@@ -10,13 +10,13 @@ public class Centipede extends Creature {
     public Centipede(Animation left, Animation right,
         Animation deadLeft, Animation deadRight)
     {
-        super(left, right, deadLeft, deadRight, 2);
+        super(left, right, deadLeft, deadRight, 2, 5);
 
     }
 
 
     public float getMaxSpeed() {
-        return 0.3f;
+        return 0.25f;
     }
 
     /**
@@ -24,7 +24,7 @@ public class Centipede extends Creature {
      tile horizontally.
      */
     public void collideHorizontal() {
-        if(getY() < (800-400)){
+        if(getY() < (600-200)){
             setY(getY()+20);
         }
         setVelocityX(-getVelocityX());
