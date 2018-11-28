@@ -149,4 +149,8 @@ public class TileMapRenderer {
         }
     }
 
+    public int getTileSize(){
+        return TILE_SIZE;
+    }
+
 }

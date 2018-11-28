@@ -323,6 +323,9 @@ public class ResourceManager {
     public Sprite getLaserSprite() {
         return laserSprite;
     }
+    public Sprite getCentipedeSprite() {
+        return centipedeSprite;
+    }
 
 
     private void loadPowerUpSprites() {

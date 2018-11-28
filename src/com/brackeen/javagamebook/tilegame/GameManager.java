@@ -303,6 +303,9 @@ public class GameManager extends GameCore {
             // normal update
             sprite.update(elapsedTime);
         }
+
+        //check if all centipedes are dead
+        checkLastCentipede();
     }
 
 
@@ -376,6 +379,7 @@ public class GameManager extends GameCore {
             if (collide instanceof Laser) {
                 creature.setHealth(creature.getHealth()-1);
                 ((Laser) collide).setState(Creature.STATE_DEAD);
+
             }
             else if (collide instanceof PowerUp) { //TODO: add derived class mushroom of power up
                 creature.collideHorizontal();
@@ -418,6 +422,28 @@ public class GameManager extends GameCore {
         }
     }
 
+    /**
+     * Checks if all the centipededs are gone from the map. If yes, spawns a new one
+     */
+    private void checkLastCentipede() {
+        Iterator itr = map.getSprites();
+        boolean centipedeAlive = false;
+        while (itr.hasNext()) {
+            //  moving cursor to next element
+            Sprite i = (Sprite) itr.next();
+            if (i instanceof Centipede) {
+                if(((Centipede) i).getState() == Creature.STATE_NORMAL) {
+                    centipedeAlive = true;
+                }
+            }
+        }
+        if (centipedeAlive == false) {
+            // Spawn new centipede
+            for(int k = map.getWidth() - 5;k<map.getWidth();k++) {
+                resourceManager.addSprite(map, resourceManager.getCentipedeSprite(), k, 0);
+            }
+        }
+    }
 
     /**
         Gives the player the speicifed power up and removes it
