@@ -4,12 +4,12 @@
 #   (Space) Empty tile
 #   A..Z    Tiles A through Z
 #   o       Mushroom
-#   !       Music Note
+#   !       Spider
 #   *       Goal
 #   1       centipedeSprite
 #   2       Bad Guy 2 (fly)
                                        
-                o                     o
+                o                   o  
     oo    o                            
                                        
           o                            
@@ -25,13 +25,13 @@
                                        
                          o   o         
                                        
-                 o                     
+  !              o                     
                o                       
                              o         
                  o                     
                                        
                  o                     
-o                                     o
+ o                               o     
                                        
                                        
                                        

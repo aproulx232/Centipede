@@ -200,8 +200,13 @@ public class GameManager extends GameCore {
         // check each tile for a collision
         for (int x=fromTileX; x<=toTileX; x++) {
             for (int y=fromTileY; y<=toTileY; y++) {
-                if (x < 0 || x >= map.getWidth() ||
-                    map.getTile(x, y) != null)
+                if (x < 0 || x >= map.getWidth() || map.getTile(x, y) != null)
+                {
+                    // collision found, return the tile
+                    pointCache.setLocation(x, y);
+                    return pointCache;
+                }
+                else if(y < 0 || y >= map.getHeight() || map.getTile(x, y) != null)
                 {
                     // collision found, return the tile
                     pointCache.setLocation(x, y);
@@ -279,7 +284,8 @@ public class GameManager extends GameCore {
 
         // player is dead! start map over
         if (player.getState() == Creature.STATE_DEAD) {
-            map = resourceManager.reloadMap();
+            map = resourceManager.reloadMap();//TODO:
+            resetMap();
             return;
         }
 
@@ -311,6 +317,8 @@ public class GameManager extends GameCore {
         //check if all centipedes are dead
         checkLastCentipede();
 
+        //check if spider is dead
+        checkSpider();
 
     }
 
@@ -319,12 +327,8 @@ public class GameManager extends GameCore {
         Updates the creature, applying gravity for creatures that
         aren't flying, and checks collisions.
     */
-    private void updateCreature(Creature creature,
-        long elapsedTime)
+    private void updateCreature(Creature creature, long elapsedTime)
     {
-
-
-
         // change x
         float dx = creature.getVelocityX();
         float oldX = creature.getX();
@@ -380,6 +384,7 @@ public class GameManager extends GameCore {
             Sprite collide = getSpriteCollision(creature);
             if (collide instanceof Laser) {
                 creature.setHealth(creature.getHealth()-1);
+                map.setScore(map.getScore()+2);
                 ((Laser) collide).setState(Creature.STATE_DEAD);
             }
             else if (collide instanceof Mushroom) {
@@ -390,6 +395,12 @@ public class GameManager extends GameCore {
             Sprite collide = getSpriteCollision(creature);
             if (collide instanceof Mushroom) {
                 ((Mushroom) collide).setHealth(((Mushroom) collide).getHealth()-1);
+                map.setScore(map.getScore()+1);
+                creature.setState(Creature.STATE_DEAD);
+            }
+            else if(collide instanceof Spider){
+                ((Spider) collide).setHealth(((Spider) collide).getHealth() - 1);
+                map.setScore(map.getScore()+100);
                 creature.setState(Creature.STATE_DEAD);
             }
         }
@@ -402,38 +413,65 @@ public class GameManager extends GameCore {
         canKill is true, collisions with Creatures will kill
         them.
     */
-    public void checkPlayerCollision(Player player,
-        boolean canKill)
+    public void checkPlayerCollision(Player player, boolean canKill)
     {
         if (!player.isAlive()) {
             return;
         }
-
         // check for player collision with other sprites
         Sprite collisionSprite = getSpriteCollision(player);
-        if (collisionSprite instanceof PowerUp) {
-            //acquirePowerUp((PowerUp)collisionSprite);
-        }
-        else if (collisionSprite instanceof Centipede) {
-            Creature badguy = (Creature)collisionSprite;
-            if (canKill) {
-                // kill the badguy and make player bounce
-                soundManager.play(boopSound);
-                badguy.setState(Creature.STATE_DYING);
-                player.setY(badguy.getY() - player.getHeight());
+        if (collisionSprite instanceof Centipede || collisionSprite instanceof Spider) {
+            // player dies!
+            player.setHealth(player.getHealth()-1);
+            player.setX(400);
+            player.setY(400);
 
-            }
-            else {
-                // player dies!
-               //player.setState(Creature.STATE_DYING);
-                player.setHealth(player.getHealth()-1);
-                player.setX(400);
-                player.setY(400);
-                if (player.getHealth() == 0){
-                    map.setScore(0);
+            //restore mushrooms and add points
+            restoreMushrooms();
+
+            killCentipede();
+            spawnNewCentipede();
+
+            killSpider();
+            spawnNewSpider();
+        }
+    }
+
+    private void restoreMushrooms(){
+        Iterator i = map.getSprites();
+        while (i.hasNext()) {
+            Sprite sprite = (Sprite) i.next();
+            if (sprite instanceof Mushroom) {
+                if(((Mushroom) sprite).getHealth() < 3){
+                    ((Mushroom) sprite).setHealth(3);
+                    map.setScore(map.getScore()+10);
                 }
             }
         }
+    }
+
+    private void resetMap(){//TODO:
+        //clear mushrooms
+        Iterator i = map.getSprites();
+        while (i.hasNext()) {
+            Sprite sprite = (Sprite) i.next();
+            if (sprite instanceof Mushroom) {
+               i.remove();
+            }
+        }
+
+        //spawn mushrooms
+        //TODO:
+        //spawn centipede
+        spawnNewCentipede();
+
+        //spawn player
+        map.getPlayer().setX(400);
+        map.getPlayer().setY(400);
+        ((Creature)map.getPlayer()).setHealth(3);
+
+        //reset score
+        map.setScore(0);
     }
 
     /**
@@ -452,9 +490,20 @@ public class GameManager extends GameCore {
             }
         }
         if (centipedeAlive == false) {
+            map.setScore(map.getScore()+600);
             spawnNewCentipede();
         }
         return centipedeAlive;
+    }
+
+    private void killCentipede(){
+        Iterator i = map.getSprites();
+        while (i.hasNext()) {
+            Sprite sprite = (Sprite) i.next();
+            if (sprite instanceof Centipede) {
+               i.remove();
+            }
+        }
     }
 
     private void spawnNewCentipede(){
@@ -462,6 +511,40 @@ public class GameManager extends GameCore {
         for(int k = map.getWidth() - 5;k<map.getWidth();k++) {
             resourceManager.addSprite(map, resourceManager.getCentipedeSprite(), k, 0);
         }
+    }
+
+    private boolean checkSpider(){
+        Iterator itr = map.getSprites();
+        boolean spiderAlive = false;
+        while (itr.hasNext()) {
+            //  moving cursor to next element
+            Sprite i = (Sprite) itr.next();
+            if (i instanceof Spider) {
+                if(((Spider) i).getState() == Creature.STATE_NORMAL) {
+                    spiderAlive = true;
+                }
+            }
+        }
+        if (spiderAlive == false) {
+            spawnNewSpider();
+        }
+        return spiderAlive;
+    }
+
+    private void killSpider(){
+        Iterator i = map.getSprites();
+        while (i.hasNext()) {
+            Sprite sprite = (Sprite) i.next();
+            if (sprite instanceof Spider) {
+                i.remove();
+            }
+        }
+    }
+    private void spawnNewSpider(){
+        //collisionSprite.setX(50);
+        //collisionSprite.setY(400);
+        //((Spider) collisionSprite).setHealth(2);
+        resourceManager.addSprite(map, resourceManager.getSpiderSprite(), 0, 25);
     }
 
     /**

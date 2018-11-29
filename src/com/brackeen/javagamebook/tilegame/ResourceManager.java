@@ -26,7 +26,7 @@ public class ResourceManager {
     private Sprite musicSprite;
     private Sprite coinSprite;
     private Sprite goalSprite;
-    private Sprite grubSprite;
+    private Sprite spiderSprite;
     private Sprite laserSprite;
     private Sprite mushroomSprite;
     private Sprite centipedeSprite;
@@ -165,7 +165,7 @@ public class ResourceManager {
                     addSprite(newMap, mushroomSprite, x, y);
                 }
                 else if (ch == '!') {
-                    addSprite(newMap, musicSprite, x, y);
+                    addSprite(newMap, spiderSprite, x, y);
                 }
                 else if (ch == '*') {
                     addSprite(newMap, goalSprite, x, y);
@@ -254,6 +254,7 @@ public class ResourceManager {
             loadImage("mushroom1.png"),
             loadImage("mushroom2.png"),
             loadImage("mushroom3.png"),
+            loadImage("spider1.png"),
         };
 
         images[1] = new Image[images[0].length];
@@ -273,6 +274,7 @@ public class ResourceManager {
         Animation[] laserAnim = new Animation[4];
         Animation[] centipedeAnim = new Animation[4];
         Animation[] mushroomAnim = new Animation[4];
+        Animation[] spiderAnim = new Animation[4];
         for (int i=0; i<4; i++) {
             playerAnim[i] = createPlayerAnim(
                 images[i][0], images[i][1], images[i][2]);
@@ -282,6 +284,8 @@ public class ResourceManager {
                 images[i][6], images[i][7]);
             mushroomAnim[i] = createMushroomAnim(
                     images[i][8], images[i][9], images[i][10]);
+            spiderAnim[i] = createSpiderAnim(
+                    images[i][11]);
         }
 
         // create creature sprites
@@ -293,6 +297,8 @@ public class ResourceManager {
                 centipedeAnim[2], centipedeAnim[3]);
         mushroomSprite = new Mushroom(createImgAnim(images[0][8]),createImgAnim(images[0][9]),
                 createImgAnim(images[0][10]),createImgAnim(images[0][8]));
+        spiderSprite = new Spider(spiderAnim[0], spiderAnim[1],
+                spiderAnim[2], spiderAnim[3]);
     }
 
     /**
@@ -332,8 +338,6 @@ public class ResourceManager {
     {
         Animation anim = new Animation();
         anim.addFrame(img1, 100000000);
-
-
         return anim;
     }
 
@@ -345,11 +349,20 @@ public class ResourceManager {
         return anim;
     }
 
+    private Animation createSpiderAnim(Image img1){
+        Animation anim = new Animation();
+        anim.addFrame(img1, 1000);
+        return anim;
+    }
+
     public Sprite getLaserSprite() {
         return laserSprite;
     }
     public Sprite getCentipedeSprite() {
         return centipedeSprite;
+    }
+    public Sprite getSpiderSprite(){
+        return spiderSprite;
     }
 
 

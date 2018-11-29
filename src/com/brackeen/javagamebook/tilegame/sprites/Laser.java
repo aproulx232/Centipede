@@ -28,5 +28,8 @@ public class Laser extends Creature {
             setVelocityY(-getMaxSpeed());
         }
     }
+    public void collideVertical() {
+        setState(STATE_DEAD);
+    }
 
 }
