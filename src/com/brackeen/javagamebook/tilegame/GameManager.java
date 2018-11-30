@@ -36,7 +36,7 @@ public class GameManager extends GameCore {
 
     // Constant used to control number of mushrooms spawned
     // Percent chance mushroom gets placed at valid location
-    public static final float SPAWN_RATE = 60;
+    public static final float SPAWN_RATE = 6;
 
     private Point pointCache = new Point();
     public TileMap map;
