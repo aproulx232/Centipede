@@ -2,7 +2,10 @@ package com.brackeen.javagamebook.tilegame;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Iterator;
+import java.util.Random;
 
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
@@ -31,6 +34,10 @@ public class GameManager extends GameCore {
 
     public static final float GRAVITY = 0.000f;
 
+    // Constant used to control number of mushrooms spawned
+    // Percent chance mushroom gets placed at valid location
+    public static final float SPAWN_RATE = 5;
+
     private Point pointCache = new Point();
     public TileMap map;
     private MidiPlayer midiPlayer;
@@ -38,6 +45,8 @@ public class GameManager extends GameCore {
     private ResourceManager resourceManager;
     private Sound prizeSound;
     private Sound boopSound;
+    private SimpleSoundPlayer simpleSoundManager;
+    private InputStream simpleStream;
     private InputManager inputManager;
     private TileMapRenderer renderer;
 
@@ -47,6 +56,8 @@ public class GameManager extends GameCore {
     private GameAction moveDown;
     private GameAction shoot;
     private GameAction exit;
+
+    private Random rand;
 
 
     public void init() {
@@ -72,12 +83,19 @@ public class GameManager extends GameCore {
         prizeSound = soundManager.getSound("sounds/prize.wav");
         boopSound = soundManager.getSound("sounds/boop2.wav");
 
+        simpleSoundManager =  new SimpleSoundPlayer("sounds/boop2.wav");
+        simpleStream = new ByteArrayInputStream(simpleSoundManager.getSamples());
+
         // start music
+
         midiPlayer = new MidiPlayer();
         Sequence sequence =
             midiPlayer.getSequence("sounds/music.midi");
-        midiPlayer.play(sequence, true);
+        //midiPlayer.play(sequence, true);
         toggleDrumPlayback();
+
+        //set random number for shroom spawning
+        rand = new Random();
 
         //spawn centipede
         spawnNewCentipede();
@@ -114,6 +132,13 @@ public class GameManager extends GameCore {
         inputManager.mapToKey(moveDown, KeyEvent.VK_DOWN);
         inputManager.mapToKey(shoot, KeyEvent.VK_SPACE);
         inputManager.mapToKey(exit, KeyEvent.VK_ESCAPE);
+
+        inputManager.setRelativeMouseMode(true);
+        inputManager.mapToMouse(moveLeft, inputManager.MOUSE_MOVE_LEFT);
+        inputManager.mapToMouse(moveRight, inputManager.MOUSE_MOVE_RIGHT);
+        inputManager.mapToMouse(moveUp, inputManager.MOUSE_MOVE_UP);
+        inputManager.mapToMouse(moveDown, inputManager.MOUSE_MOVE_DOWN);
+        inputManager.mapToMouse(shoot, inputManager.MOUSE_BUTTON_1);
     }
 
 
@@ -141,6 +166,7 @@ public class GameManager extends GameCore {
             }
             if (shoot.isPressed()) {
                 player.shoot();
+                soundManager.play(boopSound);
                 shootLaser(renderer.pixelsToTiles(player.getX()),renderer.pixelsToTiles(player.getY()));
             }
             player.setVelocityX(velocityX);
@@ -284,7 +310,7 @@ public class GameManager extends GameCore {
 
         // player is dead! start map over
         if (player.getState() == Creature.STATE_DEAD) {
-            map = resourceManager.reloadMap();//TODO:
+            map = resourceManager.reloadMap();
             resetMap();
             return;
         }
@@ -450,7 +476,7 @@ public class GameManager extends GameCore {
         }
     }
 
-    private void resetMap(){//TODO:
+    private void resetMap(){
         //clear mushrooms
         Iterator i = map.getSprites();
         while (i.hasNext()) {
@@ -461,7 +487,7 @@ public class GameManager extends GameCore {
         }
 
         //spawn mushrooms
-        //TODO:
+        spawnNewMushrooms();
         //spawn centipede
         spawnNewCentipede();
 
@@ -472,6 +498,38 @@ public class GameManager extends GameCore {
 
         //reset score
         map.setScore(0);
+    }
+
+    public Sprite getSprite(int x, int y){
+        if (x < 0 || x >= map.getWidth() || y < 0 || y >= map.getHeight())
+        {
+            return null;
+        }
+        else {
+            Iterator itr = map.getSprites();
+            while (itr.hasNext()) {
+                //  moving cursor to next element
+                Sprite i = (Sprite) itr.next();
+                if (renderer.pixelsToTiles(i.getX()) == x && renderer.pixelsToTiles(i.getY()) ==y ){
+                    return i;
+                }
+            }
+        }
+        return null;
+    }
+
+    private void spawnNewMushrooms(){
+        for (int y=1; y<map.getHeight()-8; y++) {
+            for (int x = 1; x < map.getWidth() - 1; x++) {
+                if(getSprite(x-1,y-1) == null && getSprite(x+1, y-1) == null) {
+                    // Roll to place sprite or not
+                    int randNum = rand.nextInt(100);
+                    if(randNum < SPAWN_RATE) {//TODO
+                        resourceManager.addSprite(map, resourceManager.getMushroomSprite(), x, y);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -573,6 +631,7 @@ public class GameManager extends GameCore {
     }
 
     public void shootLaser(int tileX, int tileY) {
+        //simpleSoundManager.play(simpleStream);
         resourceManager.addSprite(map,resourceManager.getLaserSprite(),tileX,tileY-1);
     }
 

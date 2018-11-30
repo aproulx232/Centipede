@@ -364,6 +364,9 @@ public class ResourceManager {
     public Sprite getSpiderSprite(){
         return spiderSprite;
     }
+    public Sprite getMushroomSprite(){
+        return mushroomSprite;
+    }
 
 
     private void loadPowerUpSprites() {
