@@ -36,7 +36,7 @@ public class GameManager extends GameCore {
 
     // Constant used to control number of mushrooms spawned
     // Percent chance mushroom gets placed at valid location
-    public static final float SPAWN_RATE = 5;
+    public static final float SPAWN_RATE = 60;
 
     private Point pointCache = new Point();
     public TileMap map;
@@ -254,6 +254,10 @@ public class GameManager extends GameCore {
     public boolean isCollision(Sprite s1, Sprite s2) {
         // if the Sprites are the same, return false
         if (s1 == s2) {
+            return false;
+        }
+        if( s1 instanceof Centipede && s2 instanceof Centipede){
+            //System.out.println("Cent collision");
             return false;
         }
 
@@ -501,8 +505,7 @@ public class GameManager extends GameCore {
     }
 
     public Sprite getSprite(int x, int y){
-        if (x < 0 || x >= map.getWidth() || y < 0 || y >= map.getHeight())
-        {
+        if (x < 0 || x >= map.getWidth() || y < 0 || y >= map.getHeight()) {
             return null;
         }
         else {
@@ -524,7 +527,7 @@ public class GameManager extends GameCore {
                 if(getSprite(x-1,y-1) == null && getSprite(x+1, y-1) == null) {
                     // Roll to place sprite or not
                     int randNum = rand.nextInt(100);
-                    if(randNum < SPAWN_RATE) {//TODO
+                    if(randNum < SPAWN_RATE) {
                         resourceManager.addSprite(map, resourceManager.getMushroomSprite(), x, y);
                     }
                 }

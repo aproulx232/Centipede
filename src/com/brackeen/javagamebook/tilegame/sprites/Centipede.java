@@ -28,6 +28,7 @@ public class Centipede extends Creature {
             setY(getY()+20);
         }
         setVelocityX(-getVelocityX());
+
     }
 
 
